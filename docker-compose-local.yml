@@ -3,7 +3,7 @@ services:
   legacywebshop:
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./legacy/docker/Dockerfile
     ports:
       - "8888:8080"
     networks:
