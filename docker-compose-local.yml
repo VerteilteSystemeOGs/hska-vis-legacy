@@ -11,6 +11,28 @@ services:
           aliases:
               - legacywebshop
 
+  category:
+    build:
+      context: ./category
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      local_dev_net:
+          aliases:
+              - legacywebshop
+
+  user:
+    build:
+      context: ./user
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      local_dev_net:
+        aliases:
+          - legacywebshop
+
   web-shop-db-image:
     build:
       context: ./
