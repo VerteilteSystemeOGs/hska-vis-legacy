@@ -1,0 +1,119 @@
+openapi: 3.0.1
+info:
+  title: EShop
+  description: 'Product Manager for EShop'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: category
+
+paths:
+  /v1/products:
+    get:
+      summary: All products
+      description: Get all products
+      operationId: getAllProducts
+      tags:
+        - product
+      responses:
+        200:
+          description: Return all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - productName
+                - categoryId
+                - price
+                - details
+              properties:
+                productName:
+                  type: string
+                categoryId:
+                  type: integer # TODO ?
+                price:
+                  type: integer
+                details:
+                  type: string
+      operationId: createNewProduct
+      tags:
+        - product
+      responses:
+        200:
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Bad product
+
+  /v1/products/{id}:
+    get:
+      summary: Get product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getProductById
+      tags:
+        - product
+      responses:
+        200:
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
+    delete:
+      summary: Delete product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteProductById
+      tags:
+        - product
+      responses:
+        204:
+          description: Product deleted
+
+components:
+  schemas:
+    Product:
+      required:
+        - name
+        - price
+        - categoryId
+        - details
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        categoryId:
+          type: integer # TODO
+        details:
+          type: string
+
+
