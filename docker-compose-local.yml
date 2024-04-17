@@ -2,10 +2,21 @@ version: '3.2'
 services:
   legacywebshop:
     build:
-      context: ./
-      dockerfile: ./legacy/docker/Dockerfile
+      context: ./legacy
+      dockerfile: ./docker/Dockerfile
     ports:
       - "8888:8080"
+    networks:
+      local_dev_net:
+          aliases:
+              - legacywebshop
+
+  category:
+    build:
+      context: ./category
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8080:8080"
     networks:
       local_dev_net:
           aliases:
