@@ -44,7 +44,7 @@ paths:
                 categoryId:
                   type: integer # TODO ?
                 price:
-                  type: integer
+                  type: double
                 details:
                   type: string
       operationId: createNewProduct
@@ -95,6 +95,60 @@ paths:
       responses:
         204:
           description: Product deleted
+  
+  /v1/products/details/{id}:
+      get:
+        summary: Get product with details by id
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        operationId: getProductDetails
+        tags:
+          - product
+        responses:
+          200:
+            description: Product found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Product'
+          404:
+            description: Product not found
+
+  /v1/products/filterProducts:
+    get:
+      summary: Get filtered products selection
+      parameters:
+        - name: minPrice
+          in: query
+          required: true
+          schema:
+            type: double
+        - name: maxPrice
+          in: query
+          required: true
+          schema:
+            type: double
+        - name: searchTest
+          in: query
+          required: true
+          schema:
+            type: string
+      operationId: filterProducts
+      tags:
+        - product
+      responses:
+        200:
+          description: List found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
 
 components:
   schemas:
@@ -110,7 +164,7 @@ components:
         name:
           type: string
         price:
-          type: integer
+          type: double
         categoryId:
           type: integer # TODO
         details:

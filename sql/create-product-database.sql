@@ -4,7 +4,10 @@ CREATE TABLE product_service.product
 (
     id   INT          NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
+    price DOUBLE         NOT NULL,
+    category_id INT      NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (category_id) REFERENCES category_service.category(id)
 ) ENGINE=InnoDB;
 
-grant all on category_service.* to webshopuser;
+grant all on product_service.* to webshopuser;

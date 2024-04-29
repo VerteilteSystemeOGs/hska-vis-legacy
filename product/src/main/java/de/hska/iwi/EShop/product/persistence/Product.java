@@ -22,9 +22,9 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
-    @Id
+    @ManyToOne()
     @Column(nullable = false)
-    private int category;
+    private int categoryId;
 
     @Column(nullable = true)
     private String details;

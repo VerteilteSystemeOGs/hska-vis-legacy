@@ -18,7 +18,13 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDTO> createNewProduct(CreateNewProductRequestDTO productRequest) {
         final var product = productService.createProduct(productRequest.getProductName());
-        return ResponseEntity.ok(ProductDTO.builder().id(product.getId()).name(product.getName()).build());
+        return ResponseEntity.ok(ProductDTO.builder()
+                                    .id(product.getId())
+                                    .name(product.getName())
+                                    .price(product.getPrice())
+                                    .categoryId(product.getCategoryId())
+                                    .details(product.getDetails())
+                                    .build());
     }
 
     @Override
@@ -33,6 +39,8 @@ public class ProductController implements ProductApi {
         return ResponseEntity.ok(ProductDTO.builder()
                                     .id(product.getId())
                                     .name(product.getName())
+                                    .price(product.getPrice())
+                                    .categoryId(product.getCategoryId())
                                     .build());
     }
 
@@ -48,17 +56,20 @@ public class ProductController implements ProductApi {
                 .map(product -> ProductDTO.builder() // Gehört der DTOBuilder in den Controller?
                         .id(product.getId())
                         .name(product.getName())
+                        .price(product.getPrice())
+                        .categoryId(product.getCategoryId())
                         .build())
                 .toList());
     }
 
     @Override
-    public ResponseEntity<List<ProductDTO>> filterProducts(Integer minPrice, Integer maxPrice, String searchText) {
+    public ResponseEntity<List<ProductDTO>> filterProducts(Double minPrice, Double maxPrice, String searchText) {
         return ResponseEntity.ok(productService.getFilteredProducts(minPrice, maxPrice, searchText).stream()
                 .map(product -> ProductDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())
+                        .categoryId(product.getCategoryId())
                         .build())
                 .toList());
     }
@@ -69,8 +80,9 @@ public class ProductController implements ProductApi {
                 .map(product -> ResponseEntity.ok(ProductDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
-                        .details(product.getDetails())
                         .price(product.getPrice())
+                        .categoryId(product.getCategoryId())
+                        .details(product.getDetails())
                         .build()))
                 .orElse(ResponseEntity.notFound().build());
     }

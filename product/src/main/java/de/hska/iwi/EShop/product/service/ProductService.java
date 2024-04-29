@@ -21,7 +21,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getFilteredProducts(Integer minPrice, Integer maxPrice, String searchText) {
+    public List<Product> getFilteredProducts(Double minPrice, Double maxPrice, String searchText) {
         return productRepository.getFilteredProducts(minPrice, maxPrice, searchText);
     }
 
