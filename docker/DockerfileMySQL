@@ -2,4 +2,6 @@ FROM mysql:5.7.9
 
 COPY ./sql/create-tables.sql /docker-entrypoint-initdb.d/create-tables.sql
 COPY ./sql/initial.sql /docker-entrypoint-initdb.d/initial.sql
+COPY ./sql/create-user-database.sql /docker-entrypoint-initdb.d/create-user-database.sql
+COPY ./sql/xen-create-initial-role-and-user.sql /docker-entrypoint-initdb.d/xen-create-initial-role-and-user.sql
 COPY ./sql/create-category-database.sql /docker-entrypoint-initdb.d/create-category-database.sql
