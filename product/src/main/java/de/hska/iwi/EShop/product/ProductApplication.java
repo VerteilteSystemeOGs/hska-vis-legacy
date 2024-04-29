@@ -1,4 +1,4 @@
-package de.hska.iwi.EShop.category;
+package de.hska.iwi.EShop.product;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

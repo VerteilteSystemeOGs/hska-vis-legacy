@@ -22,6 +22,21 @@ public class ProductController implements ProductApi {
     }
 
     @Override
+    public ResponseEntity<ProductDTO> getProductById(Integer id) {
+        final var optionalProduct = productService.getProductById(id);
+
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        final var product = optionalProduct.get();
+        return ResponseEntity.ok(ProductDTO.builder()
+                                    .id(product.getId())
+                                    .name(product.getName())
+                                    .build());
+    }
+
+    @Override
     public ResponseEntity<Void> deleteProductById(Integer id) {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
@@ -56,7 +71,7 @@ public class ProductController implements ProductApi {
                         .name(product.getName())
                         .details(product.getDetails())
                         .price(product.getPrice())
-                        .build())
+                        .build()))
                 .orElse(ResponseEntity.notFound().build());
     }
 }

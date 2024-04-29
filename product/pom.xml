@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.hska.iwi.EShop</groupId>
-	<artifactId>category</artifactId>
+	<artifactId>product</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>category</name>
-	<description>Category</description>
+	<name>product</name>
+	<description>Product</description>
 	<properties>
 		<java.version>17</java.version>
 		<springdoc.version>2.2.0</springdoc.version>
@@ -76,8 +76,8 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/api/specification.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>de.hska.iwi.EShop.category.api</apiPackage>
-							<modelPackage>de.hska.iwi.EShop.category.api</modelPackage>
+							<apiPackage>de.hska.iwi.EShop.product.api</apiPackage>
+							<modelPackage>de.hska.iwi.EShop.product.api</modelPackage>
 							<modelNameSuffix>DTO</modelNameSuffix>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>

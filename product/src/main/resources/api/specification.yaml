@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:8080/api
 
 tags:
-  - name: category
+  - name: product
 
 paths:
   /v1/products:
@@ -26,7 +26,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Category'
+                  $ref: '#/components/schemas/Product'
 
     post:
       requestBody:
