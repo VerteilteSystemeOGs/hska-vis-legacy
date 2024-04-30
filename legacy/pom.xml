@@ -133,6 +133,8 @@
                             <modelPackage>hska.iwi.eShopMaster.integration.category.api</modelPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <library>apache-httpclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <useTags>true</useTags>
                                 <openApiNullable>false</openApiNullable>
