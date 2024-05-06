@@ -52,8 +52,8 @@ public class ProductController implements ProductApi {
 
     @Override
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getProducts().stream() 
-                .map(product -> ProductDTO.builder() // Gehört der DTOBuilder in den Controller?
+        return ResponseEntity.ok(productService.getProducts().stream()
+                .map(product -> ProductDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())

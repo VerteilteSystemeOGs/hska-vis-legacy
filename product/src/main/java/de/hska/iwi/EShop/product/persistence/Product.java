@@ -1,6 +1,7 @@
 package de.hska.iwi.EShop.product.persistence;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 @Entity
@@ -22,8 +23,8 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
-    @ManyToOne()
     @Column(nullable = false)
+    @PositiveOrZero
     private int categoryId;
 
     @Column(nullable = true)

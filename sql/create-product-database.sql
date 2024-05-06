@@ -6,8 +6,7 @@ CREATE TABLE product_service.product
     name VARCHAR(255) NOT NULL,
     price DOUBLE         NOT NULL,
     category_id INT      NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES category_service.category(id)
+    PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
 grant all on product_service.* to webshopuser;

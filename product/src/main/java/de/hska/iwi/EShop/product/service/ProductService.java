@@ -17,12 +17,11 @@ public class ProductService {
     }
 
     public List<Product> getProducts() {
-        // category repository
         return productRepository.findAll();
     }
 
     public List<Product> getFilteredProducts(Double minPrice, Double maxPrice, String searchText) {
-        return productRepository.getFilteredProducts(minPrice, maxPrice, searchText);
+        return productRepository.findByPriceGreaterThanEqualAndPriceLessThanEqualAndDetailsLike(minPrice, maxPrice, searchText);
     }
 
     public Optional<Product> getProductById(final int id) {
