@@ -17,7 +17,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ResponseEntity<ProductDTO> createNewProduct(CreateNewProductRequestDTO productRequest) {
-        final var product = productService.createProduct(productRequest.getProductName());
+        final var product = productService.createProduct(productRequest.getProductName(), productRequest.getPrice(), productRequest.getCategoryId(), productRequest.getDetails());
         return ResponseEntity.ok(ProductDTO.builder()
                                     .id(product.getId())
                                     .name(product.getName())

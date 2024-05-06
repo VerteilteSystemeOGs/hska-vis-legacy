@@ -27,6 +27,6 @@ public class Product {
     @PositiveOrZero
     private int categoryId;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String details;
 }

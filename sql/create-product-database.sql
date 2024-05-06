@@ -6,6 +6,7 @@ CREATE TABLE product_service.product
     name VARCHAR(255) NOT NULL,
     price DOUBLE         NOT NULL,
     category_id INT      NOT NULL,
+    details TEXT NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 

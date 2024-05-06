@@ -42,7 +42,7 @@ paths:
                 productName:
                   type: string
                 categoryId:
-                  type: integer # TODO ?
+                  type: integer
                 price:
                   type: double
                 details:

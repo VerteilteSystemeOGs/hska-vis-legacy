@@ -28,8 +28,14 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product createProduct(final String productName) {
-        final var product = Product.builder().name(productName).build();
+    public Product createProduct(final String productName, final Double price, final int categoryId, final String details) {
+        final var product = Product.builder()
+                                .name(productName)                                    
+                                .price(price)
+                                .categoryId(categoryId)
+                                .details(details)
+                                .build();
+
         return productRepository.save(product);
     }
 
