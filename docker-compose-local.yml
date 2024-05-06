@@ -20,7 +20,7 @@ services:
     networks:
       local_dev_net:
           aliases:
-              - legacywebshop
+              - category-service
 
   user:
     build:
@@ -31,7 +31,7 @@ services:
     networks:
       local_dev_net:
         aliases:
-          - legacywebshop
+          - user-service
           
   web-shop-db-image:
     build:
