@@ -31,7 +31,7 @@ services:
     networks:
       local_dev_net:
           aliases:
-              - legacywebshop
+              - product-service
 
   user:
     build:
