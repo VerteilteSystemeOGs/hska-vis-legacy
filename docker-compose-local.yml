@@ -22,6 +22,17 @@ services:
           aliases:
               - category-service
 
+  product:
+    build:
+      context: ./product
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8082:8080"
+    networks:
+      local_dev_net:
+          aliases:
+              - product-service
+
   user:
     build:
       context: ./user
