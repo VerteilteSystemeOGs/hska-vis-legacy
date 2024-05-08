@@ -6,4 +6,5 @@ import org.springframework.data.repository.ListCrudRepository;
 
 public interface ProductRepository extends ListCrudRepository<Product, Integer> {
     List<Product> findByPriceGreaterThanEqualAndPriceLessThanEqualAndDetailsContains(Double minPrice, Double maxPrice, String details);
+    List<Product> findByCategoryId(int categoryId);
 }

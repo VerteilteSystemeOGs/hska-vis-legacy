@@ -21,7 +21,6 @@ public class ProductController implements ProductApi {
 
     @Override
     public ResponseEntity<ProductDTO> createNewProduct(CreateNewProductRequestDTO productRequest) {
-
         try {
             categoryApi.getCategoryById(productRequest.getCategoryId());
             if (categoryApi.getApiClient().getStatusCode() == 200) {
@@ -63,6 +62,15 @@ public class ProductController implements ProductApi {
     public ResponseEntity<Void> deleteProductById(Integer id) {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> existsWithCategoryId(Integer categoryId) {
+        if (productService.existsWithCategoryId(categoryId)) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @Override

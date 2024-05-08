@@ -150,6 +150,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/Product'
 
+  /v1/products/existsWithCategoryId/{id}:
+    get:
+      summary: check if an product with this category id exists
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: existsWithCategoryId
+      tags:
+        - product
+      responses:
+        200:
+          description: Product found
+        404:
+          description: Product not found
+
 components:
   schemas:
     Product:
@@ -169,5 +187,3 @@ components:
           type: integer
         details:
           type: string
-
-

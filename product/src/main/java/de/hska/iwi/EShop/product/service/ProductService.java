@@ -39,6 +39,10 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public boolean existsWithCategoryId(final int categoryId) {
+        return !productRepository.findByCategoryId(categoryId).isEmpty();
+    }
+
     public void deleteProductById(final int id) {
         productRepository.deleteById(id);
     }
