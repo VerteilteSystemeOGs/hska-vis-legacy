@@ -1,5 +1,7 @@
 package de.hska.iwi.EShop.product.api;
 
+import de.hska.iwi.EShop.integration.category.ApiException;
+import de.hska.iwi.EShop.integration.category.api.CategoryApi;
 import de.hska.iwi.EShop.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,21 +12,34 @@ import java.util.List;
 public class ProductController implements ProductApi {
 
     private final ProductService productService;
+    private final CategoryApi categoryApi;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryApi categoryApi) {
         this.productService = productService;
+        this.categoryApi = categoryApi;
     }
 
     @Override
     public ResponseEntity<ProductDTO> createNewProduct(CreateNewProductRequestDTO productRequest) {
-        final var product = productService.createProduct(productRequest.getProductName(), productRequest.getPrice(), productRequest.getCategoryId(), productRequest.getDetails());
-        return ResponseEntity.ok(ProductDTO.builder()
-                                    .id(product.getId())
-                                    .name(product.getName())
-                                    .price(product.getPrice())
-                                    .categoryId(product.getCategoryId())
-                                    .details(product.getDetails())
-                                    .build());
+
+        try {
+            categoryApi.getCategoryById(productRequest.getCategoryId());
+            if (categoryApi.getApiClient().getStatusCode() == 200) {
+                final var product = productService.createProduct(productRequest.getProductName(), productRequest.getPrice(), productRequest.getCategoryId(), productRequest.getDetails());
+                return ResponseEntity.ok(ProductDTO.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .categoryId(product.getCategoryId())
+                        .details(product.getDetails())
+                        .build());
+            }
+        } catch (ApiException e) {
+            // something went wrong.
+            // höchstwahrscheinlich ein 404 status code, weil die angegebene category id nicht existiert.
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @Override
