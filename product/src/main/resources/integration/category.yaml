@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  title: EShop
+  description: 'Category Manager for EShop'
+  version: 1.0.0
+
+servers:
+  - url: http://host.docker.internal:8080/
+
+tags:
+  - name: category
+
+paths:
+  /v1/categories:
+    get:
+      summary: All categories
+      description: Get all categories
+      operationId: getAllCategories
+      tags:
+        - category
+      responses:
+        200:
+          description: Return all categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - categoryName
+              properties:
+                categoryName:
+                  type: string
+      operationId: createNewCategory
+      tags:
+        - category
+      responses:
+        200:
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          description: Bad category
+
+  /v1/categories/{id}:
+    get:
+      summary: Get category by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getCategoryById
+      tags:
+        - category
+      responses:
+        200:
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        404:
+          description: Category not found
+    delete:
+      summary: Delete category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteCategoryById
+      tags:
+        - category
+      responses:
+        204:
+          description: Category deleted
+
+components:
+  schemas:
+    Category:
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8080/api
+  - url: http://host.docker.internal:8082/
 
 tags:
   - name: product
@@ -95,28 +95,28 @@ paths:
       responses:
         204:
           description: Product deleted
-  
+
   /v1/products/details/{id}:
-      get:
-        summary: Get product with details by id
-        parameters:
-          - name: id
-            in: path
-            required: true
-            schema:
-              type: integer
-        operationId: getProductDetails
-        tags:
-          - product
-        responses:
-          200:
-            description: Product found
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Product'
-          404:
-            description: Product not found
+    get:
+      summary: Get product with details by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getProductDetails
+      tags:
+        - product
+      responses:
+        200:
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
 
   /v1/products/filterProducts:
     get:

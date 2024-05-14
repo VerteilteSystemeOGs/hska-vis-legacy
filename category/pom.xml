@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<springdoc.version>2.2.0</springdoc.version>
+		<jackson.version>2.17.0</jackson.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -48,6 +49,55 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -70,6 +120,7 @@
 				<version>6.5.0</version>
 				<executions>
 					<execution>
+						<id>category</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
@@ -91,6 +142,27 @@
 									@lombok.Builder
 									@lombok.extern.jackson.Jacksonized
 								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>product</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/integration/product.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<apiPackage>de.hska.iwi.EShop.integration.product.api</apiPackage>
+							<modelPackage>de.hska.iwi.EShop.integration.product.api</modelPackage>
+							<modelNameSuffix>DTO</modelNameSuffix>
+							<library>apache-httpclient</library>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<configOptions>
+								<useTags>true</useTags>
+								<openApiNullable>false</openApiNullable>
+								<hideGenerationTimestamp>true</hideGenerationTimestamp>
 							</configOptions>
 						</configuration>
 					</execution>
