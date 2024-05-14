@@ -1,0 +1,31 @@
+version: '3.2'
+services:
+  legacywebshop:
+    image: ghcr.io/verteiltesystemeogs/legacywebshop
+    build:
+      context: ./legacy
+      dockerfile: ./docker/Dockerfile
+
+  category:
+    image: ghcr.io/verteiltesystemeogs/category
+    build:
+      context: ./category
+      dockerfile: ./docker/Dockerfile
+
+  product:
+    image: ghcr.io/verteiltesystemeogs/product
+    build:
+      context: ./product
+      dockerfile: ./docker/Dockerfile
+
+  user:
+    image: ghcr.io/verteiltesystemeogs/user
+    build:
+      context: ./user
+      dockerfile: ./docker/Dockerfile
+          
+  web-shop-db-image:
+    image: ghcr.io/verteiltesystemeogs/database
+    build:
+      context: ./
+      dockerfile: ./docker/DockerfileMySQL
