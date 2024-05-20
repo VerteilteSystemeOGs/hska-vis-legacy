@@ -16,7 +16,7 @@ public class PodController implements DefaultApi {
         try {
             return ResponseEntity.ok(GetHostname200ResponseDTO.builder().hostname(InetAddress.getLocalHost().getHostName()).build());
         } catch (UnknownHostException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }
