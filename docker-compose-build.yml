@@ -23,7 +23,13 @@ services:
     build:
       context: ./user
       dockerfile: ./docker/Dockerfile
-          
+
+  reverse-proxy:
+    image: ghcr.io/verteiltesystemeogs/reverse-proxy
+    build:
+      context: ./reverse-proxy
+      dockerfile: ./Dockerfile
+
   web-shop-db-image:
     image: ghcr.io/verteiltesystemeogs/database
     build:

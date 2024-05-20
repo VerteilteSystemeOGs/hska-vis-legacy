@@ -252,6 +252,36 @@ spec:
 status: {}
 
 ---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: reverse-proxy
+  name: reverse-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: reverse-proxy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: reverse-proxy
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/reverse-proxy:latest
+        name: reverse-proxy
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+
+---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -306,4 +336,23 @@ spec:
   type: LoadBalancer
 status:
   loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: reverse-proxy-service
+  name: reverse-proxy-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: reverse-proxy
+  type: LoadBalancer
+status:
+  loadBalancer: {}
 
+
+---
