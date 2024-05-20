@@ -232,7 +232,7 @@ metadata:
     run: user
   name: user
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       run: user
