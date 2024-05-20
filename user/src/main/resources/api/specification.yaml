@@ -152,6 +152,19 @@ paths:
         404:
           description: Role not found
 
+  /v1/pod/:
+    get:
+      operationId: getHostname
+      responses:
+        200:
+          description: Displaying hostname
+          content:
+            application/json:
+              schema:
+                properties:
+                  hostname:
+                    type: string
+
 components:
   schemas:
     User:
