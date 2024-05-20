@@ -86,6 +86,8 @@ paths:
       responses:
         204:
           description: Category deleted
+        409:
+          description: Category in use
 
 components:
   schemas:
