@@ -4,18 +4,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: legacywebshop
+    app: legacywebshop
   name: legacywebshop
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: legacywebshop
+      app: legacywebshop
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: legacywebshop
+        app: legacywebshop
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/legacywebshop:latest
@@ -33,18 +36,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: database
+    app: database
   name: database
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: database
+      app: database
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: database
+        app: database
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/database:latest
@@ -160,18 +166,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: category
+    app: category
   name: category
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: category
+      app: category
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: category
+        app: category
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/category:latest
@@ -201,18 +210,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: product
+    app: product
   name: product
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: product
+      app: product
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: product
+        app: product
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/product:latest
@@ -230,18 +242,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: user
+    app: user
   name: user
 spec:
   replicas: 3
   selector:
     matchLabels:
       run: user
+      app: user
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: user
+        app: user
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/user:latest
@@ -259,18 +274,21 @@ metadata:
   creationTimestamp: null
   labels:
     run: reverse-proxy
+    app: reverse-proxy
   name: reverse-proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: reverse-proxy
+      app: reverse-proxy
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         run: reverse-proxy
+        app: reverse-proxy
     spec:
       containers:
       - image: ghcr.io/verteiltesystemeogs/reverse-proxy:latest
