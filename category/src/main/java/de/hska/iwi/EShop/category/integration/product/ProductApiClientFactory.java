@@ -14,6 +14,8 @@ public class ProductApiClientFactory {
 
     @Bean
     public ApiClient apiClient() {
-        return new ApiClient();
+        ApiClient client = new ApiClient();
+        client.setBasePath("http://${PRODUCT_SERVICE_SERVICE_HOST}:${PRODUCT_SERVICE_SERVICE_PORT}");
+        return client;
     }
 }

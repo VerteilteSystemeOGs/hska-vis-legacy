@@ -36,6 +36,7 @@ public class CategoryController implements CategoryApi {
             // something went wrong
             // höchstwahrscheinlich nur ein 404 code, weil keine Produkte existieren, die die Kategorie nutzen
             // => kann gelöscht werden.
+            return ResponseEntity.internalServerError().build();
         }
 
         categoryService.deleteCategoryById(id);
