@@ -36,6 +36,9 @@ public class ProductController implements ProductApi {
         } catch (ApiException e) {
             // something went wrong.
             // höchstwahrscheinlich ein 404 status code, weil die angegebene category id nicht existiert.
+            if (e.getCode() != 404) {
+                return ResponseEntity.internalServerError().build();
+            }
         }
 
         return ResponseEntity.badRequest().build();

@@ -15,7 +15,7 @@ public class CategoryApiClientFactory {
     @Bean
     public ApiClient apiClient() {
         ApiClient client = new ApiClient();
-        client.setBasePath("http://${CATEGORY_SERVICE_SERVICE_HOST}:${CATEGORY_SERVICE_SERVICE_PORT}");
+        client.setBasePath("http://category-service:8080");
         return client;
     }
 }
