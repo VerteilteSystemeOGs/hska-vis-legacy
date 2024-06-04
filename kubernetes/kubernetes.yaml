@@ -1,0 +1,394 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: legacywebshop
+    app: legacywebshop
+  name: legacywebshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: legacywebshop
+      app: legacywebshop
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: legacywebshop
+        app: legacywebshop
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/legacywebshop:latest
+        name: legacywebshop
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+
+---
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: database
+    app: database
+  name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: database
+      app: database
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: database
+        app: database
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/database:latest
+        name: database
+        ports:
+        - containerPort: 3306
+        resources: {}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-password
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: database-configmap
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: database-password
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-password
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+status: {}
+ 
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-configmap
+data:
+  MYSQL_DATABASE: webshop
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-password
+type: Opaque
+data: 
+  MYSQL_ROOT_PASSWORD: YzhkZTExMGYzNzMwMGE1M2E5NzE3NDk=
+  MYSQL_USER: d2Vic2hvcHVzZXI=
+  MYSQL_PASSWORD: MjQwYjJjNmQ1OGZmMmNlMmY1MDhiNDlm
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+  persistentVolumeReclaimPolicy: Delete
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: database
+  name: database-service
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    run: database
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: category
+    app: category
+  name: category
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: category
+      app: category
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: category
+        app: category
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/category:latest
+        name: category
+        ports:
+        - containerPort: 8080
+        resources: {}
+        env: 
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: database-password
+              key: MYSQL_USER
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-password
+              key: MYSQL_PASSWORD
+
+status: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: product
+    app: product
+  name: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: product
+      app: product
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: product
+        app: product
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/product:latest
+        name: product
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: user
+    app: user
+  name: user
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: user
+      app: user
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: user
+        app: user
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/user:latest
+        name: user
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: reverse-proxy
+    app: reverse-proxy
+  name: reverse-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: reverse-proxy
+      app: reverse-proxy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: reverse-proxy
+        app: reverse-proxy
+    spec:
+      containers:
+      - image: ghcr.io/verteiltesystemeogs/reverse-proxy:latest
+        name: reverse-proxy
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: category
+  name: category-service
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: category
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: product
+  name: product-service
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: product
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: user
+  name: user-service
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: user
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: reverse-proxy-service
+  name: reverse-proxy-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: reverse-proxy
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eshop-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: reverse-proxy-service
+            port:
+              number: 80
