@@ -2,6 +2,7 @@ package de.hska.iwi.EShop.product.api;
 
 import de.hska.iwi.EShop.integration.category.ApiException;
 import de.hska.iwi.EShop.integration.category.api.CategoryApi;
+import de.hska.iwi.EShop.product.persistence.Product;
 import de.hska.iwi.EShop.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +72,16 @@ public class ProductController implements ProductApi {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteAllWithCategoryId(Integer categoryId) {
+        List<Product> productsToDelete = productService.getAllProductsForCategory(categoryId);
+        for (Product productToDelete: productsToDelete) {
+            productService.deleteProductById(productToDelete.getId());
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     @Override
