@@ -82,7 +82,7 @@ paths:
         204:
           description: User deleted
 
-  /v1/user/:
+  /v1/user:
     post:
       requestBody:
         content:
@@ -128,7 +128,7 @@ paths:
         404:
           description: Role not found
 
-  /v1/role/:
+  /v1/role:
     post:
       requestBody:
         content:
