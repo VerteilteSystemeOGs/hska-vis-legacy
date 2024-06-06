@@ -304,6 +304,24 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    run: legacywebshop
+  name: legacywebshop-service
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: legacywebshop
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     run: category
   name: category-service
 spec:
