@@ -35,7 +35,7 @@ public class ProductDetailsAction extends ActionSupport {
 		user = (UserDTO) session.get("webshop_user");
 		
 		if(user != null) {
-			product = productApi.getProductById(id);
+			product = productApi.getProductDetails(id);
 			
 			res = "success";			
 		}
