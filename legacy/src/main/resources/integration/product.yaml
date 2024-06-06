@@ -1,0 +1,189 @@
+openapi: 3.0.1
+info:
+  title: EShop
+  description: 'Product Manager for EShop'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: product
+
+paths:
+  /v1/products:
+    get:
+      summary: All products
+      description: Get all products
+      operationId: getAllProducts
+      tags:
+        - product
+      responses:
+        200:
+          description: Return all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - productName
+                - categoryId
+                - price
+                - details
+              properties:
+                productName:
+                  type: string
+                categoryId:
+                  type: integer
+                price:
+                  type: double
+                details:
+                  type: string
+      operationId: createNewProduct
+      tags:
+        - product
+      responses:
+        200:
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Bad product
+
+  /v1/products/{id}:
+    get:
+      summary: Get product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getProductById
+      tags:
+        - product
+      responses:
+        200:
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
+    delete:
+      summary: Delete product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteProductById
+      tags:
+        - product
+      responses:
+        204:
+          description: Product deleted
+  
+  /v1/products/details/{id}:
+      get:
+        summary: Get product with details by id
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        operationId: getProductDetails
+        tags:
+          - product
+        responses:
+          200:
+            description: Product found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Product'
+          404:
+            description: Product not found
+
+  /v1/products/filterProducts:
+    get:
+      summary: Get filtered products selection
+      parameters:
+        - name: minPrice
+          in: query
+          required: true
+          schema:
+            type: double
+        - name: maxPrice
+          in: query
+          required: true
+          schema:
+            type: double
+        - name: searchTest
+          in: query
+          required: true
+          schema:
+            type: string
+      operationId: filterProducts
+      tags:
+        - product
+      responses:
+        200:
+          description: List found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+  /v1/products/existsWithCategoryId/{id}:
+    get:
+      summary: check if an product with this category id exists
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: existsWithCategoryId
+      tags:
+        - product
+      responses:
+        200:
+          description: Product found
+        404:
+          description: Product not found
+
+components:
+  schemas:
+    Product:
+      required:
+        - name
+        - price
+        - categoryId
+        - details
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: double
+        categoryId:
+          type: integer
+        details:
+          type: string

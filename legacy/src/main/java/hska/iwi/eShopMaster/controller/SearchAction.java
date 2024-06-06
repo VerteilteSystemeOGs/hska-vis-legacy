@@ -3,9 +3,11 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
-import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
+
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -23,7 +25,8 @@ public class SearchAction extends ActionSupport{
 	private static final long serialVersionUID = -6565401833074694229L;
 
 	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
-	
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+
 	private String searchDescription = null;
 	private String searchMinPrice;
 	private String searchMaxPrice;
@@ -32,7 +35,7 @@ public class SearchAction extends ActionSupport{
 	private Double sMaxPrice = null;
 	
 	private User user;
-	private List<Product> products;
+	private List<ProductDTO> products;
 	private List<CategoryDTO> categories;
 	
 
@@ -47,7 +50,6 @@ public class SearchAction extends ActionSupport{
 		
 		if(user != null){
 			// Search products and show results:
-			ProductManager productManager = new ProductManagerImpl();
 //			this.products = productManager.getProductsForSearchValues(this.searchDescription, this.searchMinPrice, this.searchMaxPrice);
 			if (!searchMinPrice.isEmpty()){
 				sMinPrice =  Double.parseDouble(this.searchMinPrice);
@@ -55,7 +57,7 @@ public class SearchAction extends ActionSupport{
 			if (!searchMaxPrice.isEmpty()){
 				sMaxPrice =  Double.parseDouble(this.searchMaxPrice);
 			}
-			this.products = productManager.getProductsForSearchValues(this.searchDescription, sMinPrice, sMaxPrice);
+			this.products = productApi.filterProducts(sMinPrice, sMaxPrice, this.searchDescription);
 			
 			// Show all categories:
 			this.categories = categoryApi.getAllCategories();
@@ -74,11 +76,11 @@ public class SearchAction extends ActionSupport{
 			this.user = user;
 		}
 		
-		public List<Product> getProducts() {
+		public List<ProductDTO> getProducts() {
 			return products;
 		}
 
-		public void setProducts(List<Product> products) {
+		public void setProducts(List<ProductDTO> products) {
 			this.products = products;
 		}
 

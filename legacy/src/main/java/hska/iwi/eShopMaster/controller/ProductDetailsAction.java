@@ -1,8 +1,8 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.Map;
@@ -17,12 +17,14 @@ public class ProductDetailsAction extends ActionSupport {
 	private String searchValue;
 	private Integer searchMinPrice;
 	private Integer searchMaxPrice;
-	private Product product;
+	private ProductDTO product;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7708747680872125699L;
+
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
 
 	public String execute() throws Exception {
 
@@ -32,8 +34,7 @@ public class ProductDetailsAction extends ActionSupport {
 		user = (User) session.get("webshop_user");
 		
 		if(user != null) {
-			ProductManager productManager = new ProductManagerImpl();
-			product = productManager.getProductById(id);
+			product = productApi.getProductById(id);
 			
 			res = "success";			
 		}
@@ -81,11 +82,11 @@ public class ProductDetailsAction extends ActionSupport {
 		this.searchMaxPrice = searchMaxPrice;
 	}
 
-	public Product getProduct() {
+	public ProductDTO getProduct() {
 		return product;
 	}
 
-	public void setProduct(Product product) {
+	public void setProduct(ProductDTO product) {
 		this.product = product;
 	}
 }

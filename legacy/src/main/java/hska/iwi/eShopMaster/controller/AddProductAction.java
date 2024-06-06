@@ -1,7 +1,10 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+import hska.iwi.eShopMaster.integration.product.api.CreateNewProductRequestDTO;
+
 import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
@@ -15,6 +18,8 @@ public class AddProductAction extends ActionSupport {
 
 	private static final long serialVersionUID = 39979991339088L;
 
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+
 	private String name = null;
 	private String price = null;
 	private int categoryId = 0;
@@ -27,11 +32,9 @@ public class AddProductAction extends ActionSupport {
 
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 
-			ProductManager productManager = new ProductManagerImpl();
-			int productId = productManager.addProduct(name, Double.parseDouble(price), categoryId,
-					details);
+			ProductDTO product = productApi.createNewProduct(new CreateNewProductRequestDTO().productName(name).categoryId(categoryId).price(Double.parseDouble(price)).details(details));
 
-			if (productId > 0) {
+			if (product != null) {
 				result = "success";
 			}
 		}

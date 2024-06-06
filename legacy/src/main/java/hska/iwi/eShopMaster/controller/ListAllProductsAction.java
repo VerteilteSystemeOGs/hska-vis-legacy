@@ -1,8 +1,8 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Product;
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -18,8 +18,10 @@ public class ListAllProductsAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = -94109228677381902L;
 	
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+
 	User user;
-	private List<Product> products;
+	private List<ProductDTO> products;
 	
 	public String execute() throws Exception{
 		String result = "input";
@@ -29,8 +31,7 @@ public class ListAllProductsAction extends ActionSupport {
 		
 		if(user != null){
 			System.out.println("list all products!");
-			ProductManager productManager = new ProductManagerImpl();
-			this.products = productManager.getProducts();
+			this.products = productApi.getAllProducts();
 			result = "success";
 		}
 		
@@ -45,11 +46,11 @@ public class ListAllProductsAction extends ActionSupport {
 		this.user = user;
 	}
 	
-	public List<Product> getProducts() {
+	public List<ProductDTO> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<Product> products) {
+	public void setProducts(List<ProductDTO> products) {
 		this.products = products;
 	}
 
