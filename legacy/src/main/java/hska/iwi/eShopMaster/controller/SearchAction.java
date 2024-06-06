@@ -8,6 +8,7 @@ import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
 import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class SearchAction extends ActionSupport{
 	private Double sMinPrice = null;
 	private Double sMaxPrice = null;
 	
-	private User user;
+	private UserDTO user;
 	private List<ProductDTO> products;
 	private List<CategoryDTO> categories;
 	
@@ -45,7 +46,7 @@ public class SearchAction extends ActionSupport{
 		
 		// Get user:
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
+		user = (UserDTO) session.get("webshop_user");
 		ActionContext.getContext().setLocale(Locale.US);  
 		
 		if(user != null){
@@ -68,11 +69,11 @@ public class SearchAction extends ActionSupport{
 	}
 			
 		
-		public User getUser() {
+		public UserDTO getUser() {
 			return user;
 		}
 
-		public void setUser(User user) {
+		public void setUser(UserDTO user) {
 			this.user = user;
 		}
 		

@@ -4,9 +4,6 @@ import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
 import hska.iwi.eShopMaster.integration.user.api.GetUserByNameRequestDTO;
 import hska.iwi.eShopMaster.integration.user.api.UserApi;
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
-import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.UserManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.Map;
 
@@ -42,7 +39,6 @@ public class LoginAction extends ActionSupport {
 		if (user != null) {
 			// Is the password correct?
 
-			// TODO: --> continue here <--
 			if (user.getPassword().equals(getPassword())) {
 				// Get session to save user role and login:
 				Map<String, Object> session = ActionContext.getContext().getSession();
@@ -50,8 +46,8 @@ public class LoginAction extends ActionSupport {
 				// Save user object in session:
 				session.put("webshop_user", user);
 				session.put("message", "");
-				firstname= user.getFirstname();
-				lastname = user.getLastname();
+				firstname= user.getFirstName();
+				lastname = user.getLastName();
 				role = user.getRole().getTyp();
 				result = "success";
 			}

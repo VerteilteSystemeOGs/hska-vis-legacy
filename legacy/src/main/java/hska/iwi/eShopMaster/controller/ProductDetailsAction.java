@@ -3,6 +3,7 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
 import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.Map;
@@ -12,7 +13,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class ProductDetailsAction extends ActionSupport {
 	
-	private User user;
+	private UserDTO user;
 	private int id;
 	private String searchValue;
 	private Integer searchMinPrice;
@@ -31,7 +32,7 @@ public class ProductDetailsAction extends ActionSupport {
 		String res = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
+		user = (UserDTO) session.get("webshop_user");
 		
 		if(user != null) {
 			product = productApi.getProductById(id);
@@ -42,11 +43,11 @@ public class ProductDetailsAction extends ActionSupport {
 		return res;		
 	}
 	
-	public User getUser() {
+	public UserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserDTO user) {
 		this.user = user;
 	}
 

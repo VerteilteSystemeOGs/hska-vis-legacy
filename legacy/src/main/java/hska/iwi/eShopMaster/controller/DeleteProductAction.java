@@ -4,6 +4,7 @@ import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
 import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.Map;
@@ -27,7 +28,7 @@ public class DeleteProductAction extends ActionSupport {
 		String res = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
+		UserDTO user = (UserDTO) session.get("webshop_user");
 		
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 

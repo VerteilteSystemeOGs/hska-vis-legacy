@@ -3,6 +3,7 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
 import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -20,14 +21,14 @@ public class ListAllProductsAction extends ActionSupport {
 	
 	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
 
-	User user;
+	UserDTO user;
 	private List<ProductDTO> products;
 	
 	public String execute() throws Exception{
 		String result = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
+		user = (UserDTO) session.get("webshop_user");
 		
 		if(user != null){
 			System.out.println("list all products!");
@@ -38,11 +39,11 @@ public class ListAllProductsAction extends ActionSupport {
 		return result;
 	}
 	
-	public User getUser() {
+	public UserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserDTO user) {
 		this.user = user;
 	}
 	

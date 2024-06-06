@@ -5,6 +5,7 @@ import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 import hska.iwi.eShopMaster.integration.product.api.CreateNewProductRequestDTO;
 
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
@@ -28,7 +29,7 @@ public class AddProductAction extends ActionSupport {
 	public String execute() throws Exception {
 		String result = "input";
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
+		UserDTO user = (UserDTO) session.get("webshop_user");
 
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 

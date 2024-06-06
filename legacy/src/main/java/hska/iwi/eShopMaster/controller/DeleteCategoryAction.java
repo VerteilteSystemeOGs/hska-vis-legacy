@@ -3,6 +3,7 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class DeleteCategoryAction extends ActionSupport {
 		String res = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
+		UserDTO user = (UserDTO) session.get("webshop_user");
 		
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 

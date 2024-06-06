@@ -3,6 +3,7 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class InitCategorySiteAction extends ActionSupport {
 	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
 
 	private String pageToGoTo;
-	private User user;
+	private UserDTO user;
 
 	private List<CategoryDTO> categories;
 
@@ -30,7 +31,7 @@ public class InitCategorySiteAction extends ActionSupport {
 		String res = "input";
 
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
+		user = (UserDTO) session.get("webshop_user");
 		boolean isAdmin = true;
 		if(user != null && isAdmin) {
 
@@ -65,11 +66,11 @@ public class InitCategorySiteAction extends ActionSupport {
 		this.pageToGoTo = pageToGoTo;
 	}
 
-	public User getUser() {
+	public UserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserDTO user) {
 		this.user = user;
 	}
 

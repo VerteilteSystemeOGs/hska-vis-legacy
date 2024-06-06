@@ -5,6 +5,7 @@ import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.integration.category.api.CreateNewCategoryRequestDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.ArrayList;
@@ -27,14 +28,14 @@ public class AddCategoryAction extends ActionSupport {
 
 	private List<CategoryDTO> categories;
 	
-	User user;
+	UserDTO user;
 
 	public String execute() throws Exception {
 
 		String res = "input";
 
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
+		user = (UserDTO) session.get("webshop_user");
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 			// Add category
 			categoryApi.createNewCategory(new CreateNewCategoryRequestDTO().categoryName(newCatName));

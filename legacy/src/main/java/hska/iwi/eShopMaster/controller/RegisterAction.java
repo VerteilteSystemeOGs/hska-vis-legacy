@@ -1,8 +1,9 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.UserManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Role;
+import hska.iwi.eShopMaster.integration.user.ApiException;
+import hska.iwi.eShopMaster.integration.user.RoleApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.*;
 
 import java.util.Map;
 
@@ -21,33 +22,41 @@ public class RegisterAction extends ActionSupport {
     private String firstname;
     private String lastname;
     
-    private Role role = null;
-    
+    private RoleDTO role = null;
+
+    private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+    private final RoleApi roleApi = new RoleApi(RoleApiClientFactory.getClient());
+
     @Override
     public String execute() throws Exception {
         
         // Return string:
         String result = "input";
 
-        UserManager userManager = new UserManagerImpl();
+   		this.role = roleApi.getRoleByLevel(new GetRoleByLevelRequestDTO().roleLevel(1)); // 1 -> regular User, 2-> Admin
 
-   		this.role = userManager.getRoleByLevel(1); // 1 -> regular User, 2-> Admin
+        try {
+            // save it to database
+            userApi.createNewUser(
+                new CreateNewUserRequestDTO()
+                    .userName(this.username)
+                    .firstName(this.firstname)
+                    .lastName(this.lastname)
+                    .password(this.password1)
+            );
 
-   		if (!userManager.doesUserAlreadyExist(this.username)) {
-    		    	
-	        // save it to database
-	        userManager.registerUser(this.username, this.firstname, this.lastname, this.password1, this.role);
-	            // User has been saved successfully to databse:
-	        	addActionMessage("user registered, please login");
-	        	addActionError("user registered, please login");
-				Map<String, Object> session = ActionContext.getContext().getSession();
-				session.put("message", "user registered, please login");
-	            result = "success";
-	        
-    	}
-    	else {
-    		addActionError(getText("error.username.alreadyInUse"));
-    	}
+            // User has been saved successfully to databse:
+            addActionMessage("user registered, please login");
+            addActionError("user registered, please login");
+            Map<String, Object> session = ActionContext.getContext().getSession();
+            session.put("message", "user registered, please login");
+            result = "success";
+        } catch (ApiException e) {
+            if (e.getCode() == 412) { // user name is in use
+                addActionError(getText("error.username.alreadyInUse"));
+            }
+        }
+
         return result;
 
     }
@@ -115,11 +124,11 @@ public class RegisterAction extends ActionSupport {
         this.password2 = password;
     }
     
-    public Role getRole() {
+    public RoleDTO getRole() {
         return (this.role);
     }
     
-    public void setRole(Role role) {
+    public void setRole(RoleDTO role) {
         this.role = role;
     }
 
