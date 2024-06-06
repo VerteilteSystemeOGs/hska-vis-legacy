@@ -1,0 +1,195 @@
+openapi: 3.0.1
+info:
+  title: EShop
+  description: 'User Manager for EShop'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: user
+
+paths:
+  /v1/users:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - userName
+                - firstName
+                - lastName
+                - password
+              properties:
+                userName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                password:
+                  type: string
+      operationId: createNewUser
+      tags:
+        - user
+      responses:
+        200:
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad user
+        412:
+          description: Username already in use
+
+  /v1/users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getUserById
+      tags:
+        - user
+      responses:
+        200:
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+    delete:
+      summary: Delete user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteUserById
+      tags:
+        - user
+      responses:
+        204:
+          description: User deleted
+
+  /v1/user:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - userName
+              properties:
+                userName:
+                  type: string
+      operationId: getUserByName
+      tags:
+        - user
+      responses:
+        200:
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+
+  /v1/roles/{id}:
+    get:
+      summary: Get role by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getRoleById
+      tags:
+        - role
+      responses:
+        200:
+          description: Role found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        404:
+          description: Role not found
+
+  /v1/role:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - roleLevel
+              properties:
+                roleLevel:
+                  type: integer
+      operationId: getRoleByLevel
+      tags:
+        - role
+      responses:
+        200:
+          description: Role found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        404:
+          description: Role not found
+
+  /v1/pod/:
+    get:
+      operationId: getHostname
+      responses:
+        200:
+          description: Displaying hostname
+          content:
+            application/json:
+              schema:
+                properties:
+                  hostname:
+                    type: string
+
+components:
+  schemas:
+    User:
+      required:
+        - name
+        - firstName
+        - lastName
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
+    Role:
+      properties:
+        id:
+          type: integer
+        typ:
+          type: string
+        level:
+          type: integer
