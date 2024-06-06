@@ -35,12 +35,12 @@
 					<s:form action="RegisterAction" theme="simple">
 						<div class = "form-group">
 							<label>Vorname*:</label>
-							<s:textfield name="firstname" cssClass ="form-control" required="true" />
+							<s:textfield name="firstName" cssClass="form-control" required="true"/>
 						</div>
 						
 						<div class = "form-group">
 							<label>Nachname*:</label>
-							<s:textfield name="lastname" cssClass ="form-control"	required="true" />
+							<s:textfield name="lastName" cssClass="form-control" required="true"/>
 						</div>
 						
 						<div class = "form-group">
