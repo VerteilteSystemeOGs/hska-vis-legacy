@@ -28,18 +28,22 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<Void> deleteCategoryById(Integer id) {
         try {
-            productApi.existsWithCategoryId(id);
-            if (productApi.getApiClient().getStatusCode() == 200) {
-                return ResponseEntity.status(409).build();
+            productApi.deleteAllWithCategoryId(id);
+            int statusCode = productApi.getApiClient().getStatusCode();
+            if (statusCode == 204) { // 204 indicates successful delete operation.
+                categoryService.deleteCategoryById(id);
+                return ResponseEntity.noContent().build();
             }
         } catch (ApiException e) {
             // something went wrong
             // höchstwahrscheinlich nur ein 404 code, weil keine Produkte existieren, die die Kategorie nutzen
             // => kann gelöscht werden.
+            if (e.getCode() != 404) {
+                return ResponseEntity.internalServerError().build();
+            }
         }
 
-        categoryService.deleteCategoryById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(409).build();
     }
 
     @Override

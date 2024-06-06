@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://host.docker.internal:8082/
+  - url: http://product-service:8080
 
 tags:
   - name: product
@@ -167,6 +167,20 @@ paths:
           description: Product found
         404:
           description: Product not found
+    delete:
+      summary: force delete all products with this id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteAllWithCategoryId
+      tags:
+        - product
+      responses:
+        204:
+          description: all products with id deleted
 
 components:
   schemas:
