@@ -1,13 +1,15 @@
 package hska.iwi.eShopMaster.controller;
 
+import hska.iwi.eShopMaster.integration.category.ApiException;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
 import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 import hska.iwi.eShopMaster.integration.product.api.CreateNewProductRequestDTO;
 
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +22,13 @@ public class AddProductAction extends ActionSupport {
 	private static final long serialVersionUID = 39979991339088L;
 
 	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
 
 	private String name = null;
 	private String price = null;
 	private int categoryId = 0;
 	private String details = null;
+	private List<CategoryDTO> categories;
 
 	public String execute() throws Exception {
 		String result = "input";
@@ -46,8 +50,13 @@ public class AddProductAction extends ActionSupport {
 	@Override
 	public void validate() {
 		// Validate name:
+        try {
+            this.setCategories(categoryApi.getAllCategories());
+        } catch (ApiException ignored) {
 
-		if (getName() == null || getName().length() == 0) {
+        }
+
+        if (getName() == null || getName().length() == 0) {
 			addActionError(getText("error.product.name.required"));
 		}
 
@@ -95,4 +104,11 @@ public class AddProductAction extends ActionSupport {
 		this.details = details;
 	}
 
+	public List<CategoryDTO> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<CategoryDTO> categories) {
+		this.categories = categories;
+	}
 }
