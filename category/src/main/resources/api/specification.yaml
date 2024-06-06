@@ -87,7 +87,7 @@ paths:
         204:
           description: Category deleted
         409:
-          description: Category in use
+          description: Category in use and usage could not be deleted
 
 components:
   schemas:

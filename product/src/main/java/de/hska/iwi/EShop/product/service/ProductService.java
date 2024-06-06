@@ -43,6 +43,10 @@ public class ProductService {
         return !productRepository.findByCategoryId(categoryId).isEmpty();
     }
 
+    public List<Product> getAllProductsForCategory(final int categoryId) {
+        return productRepository.findByCategoryId(categoryId);
+    }
+
     public void deleteProductById(final int id) {
         productRepository.deleteById(id);
     }

@@ -28,9 +28,11 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<Void> deleteCategoryById(Integer id) {
         try {
-            productApi.existsWithCategoryId(id);
-            if (productApi.getApiClient().getStatusCode() == 200) {
-                return ResponseEntity.status(409).build();
+            productApi.deleteAllWithCategoryId(id);
+            int statusCode = productApi.getApiClient().getStatusCode();
+            if (statusCode == 204) { // 204 indicates successful delete operation.
+                categoryService.deleteCategoryById(id);
+                return ResponseEntity.noContent().build();
             }
         } catch (ApiException e) {
             // something went wrong
@@ -38,8 +40,7 @@ public class CategoryController implements CategoryApi {
             // => kann gelöscht werden.
         }
 
-        categoryService.deleteCategoryById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(409).build();
     }
 
     @Override
