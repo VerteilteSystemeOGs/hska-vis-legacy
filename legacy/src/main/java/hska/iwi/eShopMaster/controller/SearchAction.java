@@ -1,10 +1,10 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
 import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.Product;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
@@ -21,7 +21,8 @@ public class SearchAction extends ActionSupport{
 	 * 
 	 */
 	private static final long serialVersionUID = -6565401833074694229L;
-	
+
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
 	
 	private String searchDescription = null;
 	private String searchMinPrice;
@@ -32,7 +33,7 @@ public class SearchAction extends ActionSupport{
 	
 	private User user;
 	private List<Product> products;
-	private List<Category> categories;
+	private List<CategoryDTO> categories;
 	
 
 	public String execute() throws Exception {
@@ -57,8 +58,7 @@ public class SearchAction extends ActionSupport{
 			this.products = productManager.getProductsForSearchValues(this.searchDescription, sMinPrice, sMaxPrice);
 			
 			// Show all categories:
-			CategoryManager categoryManager = new CategoryManagerImpl();
-			this.categories = categoryManager.getCategories();
+			this.categories = categoryApi.getAllCategories();
 			result = "success";
 		}
 		
@@ -81,12 +81,12 @@ public class SearchAction extends ActionSupport{
 		public void setProducts(List<Product> products) {
 			this.products = products;
 		}
-		
-		public List<Category> getCategories() {
+
+	public List<CategoryDTO> getCategories() {
 			return categories;
 		}
 
-		public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 			this.categories = categories;
 		}
 		

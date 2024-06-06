@@ -1,8 +1,8 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -18,10 +18,12 @@ public class InitCategorySiteAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = -1108136421569378914L;
 
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+
 	private String pageToGoTo;
 	private User user;
 
-	private List<Category> categories;
+	private List<CategoryDTO> categories;
 
 	public String execute() throws Exception {
 		
@@ -32,9 +34,8 @@ public class InitCategorySiteAction extends ActionSupport {
 		boolean isAdmin = true;
 		if(user != null && isAdmin) {
 
-			CategoryManager categoryManager = new CategoryManagerImpl();
-			this.setCategories(categoryManager.getCategories());
-			
+			this.setCategories(categoryApi.getAllCategories());
+
 			if(pageToGoTo != null){
 				if(pageToGoTo.equals("c")){
 					res = "successC";	
@@ -48,11 +49,11 @@ public class InitCategorySiteAction extends ActionSupport {
 		return res;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 

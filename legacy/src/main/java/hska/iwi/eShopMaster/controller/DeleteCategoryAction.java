@@ -1,8 +1,8 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -17,9 +17,11 @@ public class DeleteCategoryAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = 1254575994729199914L;
-	
+
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+
 	private int catId;
-	private List<Category> categories;
+	private List<CategoryDTO> categories;
 
 	public String execute() throws Exception {
 		
@@ -31,11 +33,9 @@ public class DeleteCategoryAction extends ActionSupport {
 		if(user != null && (user.getRole().getTyp().equals("admin"))) {
 
 			// Helper inserts new Category in DB:
-			CategoryManager categoryManager = new CategoryManagerImpl();
-		
-			categoryManager.delCategoryById(catId);
+			categoryApi.deleteCategoryById(catId);
 
-			categories = categoryManager.getCategories();
+			categories = categoryApi.getAllCategories();
 				
 			res = "success";
 
@@ -53,11 +53,11 @@ public class DeleteCategoryAction extends ActionSupport {
 		this.catId = catId;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 }
