@@ -14,6 +14,8 @@ public class ProductApiClientFactory {
 
     @Bean
     public ApiClient apiClient() {
-        return new ApiClient();
+        ApiClient client = new ApiClient();
+        client.setBasePath("http://product-service:8080");
+        return client;
     }
 }
