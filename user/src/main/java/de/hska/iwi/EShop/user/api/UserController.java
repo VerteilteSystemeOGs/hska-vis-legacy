@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UserApi {
@@ -81,6 +83,25 @@ public class UserController implements UserApi {
                                 .typ(user.getRole().getRoleType())
                                 .build())
                         .build()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Override
+    public ResponseEntity<HasUserAdminRight200ResponseDTO> hasUserAdminRight(Integer id) {
+        return userService.getUserById(id)
+                .map(user -> {
+                    if (user.getRole().getRoleType().equals("admin")) {
+                        return ResponseEntity.ok(HasUserAdminRight200ResponseDTO.builder()
+                                .hasAdminRight(true)
+                                .build()
+                        );
+                    } else {
+                        return ResponseEntity.ok(HasUserAdminRight200ResponseDTO.builder()
+                                .hasAdminRight(false)
+                                .build()
+                        );
+                    }
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -82,6 +82,30 @@ paths:
         204:
           description: User deleted
 
+  /v1/user/isAdmin{id}:
+    get:
+      summary: check if user with the id has admin rights
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: hasUserAdminRight
+      tags:
+        - user
+      responses:
+        200:
+          description: has user admin right true or false
+          content:
+            application/json:
+              schema:
+                properties:
+                  hasAdminRight:
+                    type: boolean
+        404:
+          description: User not found
+
   /v1/user:
     post:
       requestBody:
