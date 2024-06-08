@@ -9,6 +9,8 @@ import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 import hska.iwi.eShopMaster.integration.product.api.CreateNewProductRequestDTO;
 
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class AddProductAction extends ActionSupport {
 
 	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
 	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
 
 	private String name = null;
 	private String price = null;
@@ -35,7 +38,14 @@ public class AddProductAction extends ActionSupport {
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		UserDTO user = (UserDTO) session.get("webshop_user");
 
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
+
+		if(hasAdminRight) {
 
 			ProductDTO product = productApi.createNewProduct(new CreateNewProductRequestDTO().productName(name).categoryId(categoryId).price(Double.parseDouble(price)).details(details));
 

@@ -3,6 +3,8 @@ package hska.iwi.eShopMaster.controller;
 import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
@@ -21,6 +23,8 @@ public class DeleteCategoryAction extends ActionSupport {
 
 	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
 
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+
 	private int catId;
 	private List<CategoryDTO> categories;
 
@@ -30,8 +34,15 @@ public class DeleteCategoryAction extends ActionSupport {
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		UserDTO user = (UserDTO) session.get("webshop_user");
+
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
 		
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		if(hasAdminRight) {
 
 			// Helper inserts new Category in DB:
 			categoryApi.deleteCategoryById(catId);

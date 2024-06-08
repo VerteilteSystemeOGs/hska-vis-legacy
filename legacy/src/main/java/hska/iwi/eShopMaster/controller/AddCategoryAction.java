@@ -5,6 +5,8 @@ import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
 import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
 import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
 import hska.iwi.eShopMaster.integration.category.api.CreateNewCategoryRequestDTO;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
@@ -23,6 +25,8 @@ public class AddCategoryAction extends ActionSupport {
 	private static final long serialVersionUID = -6704600867133294378L;
 
 	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
 	
 	private String newCatName = null;
 
@@ -36,7 +40,15 @@ public class AddCategoryAction extends ActionSupport {
 
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		user = (UserDTO) session.get("webshop_user");
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
+
+		if(hasAdminRight) {
 			// Add category
 			categoryApi.createNewCategory(new CreateNewCategoryRequestDTO().categoryName(newCatName));
 			
