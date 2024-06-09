@@ -47,9 +47,8 @@ public class Product {
     }
 
     public static Specification<Product> withDetails(String details) {
-        //return (root, query, cb) -> details != null ? cb.like(root.get("details"), "%" + details + "%") : null;
-        //return (root, query, cb) -> details != null ? cb.and(cb.and(), cb.function("CONTAINS", Boolean.class, root.get("details"), cb.literal(details))) : null;
-
-        return (root, query, cb) -> cb.and(cb.and(), cb.function("CONTAINS", Boolean.class, root.get("details"), cb.literal(details)));
+        System.out.println("details param: " + details);
+        return (root, query, cb) -> details != null ? cb.like(root.get("details"), "%" + details + "%") : null;
+        //return (root, query, cb) -> details != null ? cb.isTrue(cb.function("CONTAINS", Boolean.class, root.get("details"), cb.literal(details))) : null;
     }
 }
