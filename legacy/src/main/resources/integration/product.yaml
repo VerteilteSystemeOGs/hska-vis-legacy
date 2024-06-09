@@ -124,17 +124,17 @@ paths:
       parameters:
         - name: minPrice
           in: query
-          required: true
+          required: false
           schema:
             type: double
         - name: maxPrice
           in: query
-          required: true
+          required: false
           schema:
             type: double
         - name: searchTest
           in: query
-          required: true
+          required: false
           schema:
             type: string
       operationId: filterProducts
@@ -167,6 +167,20 @@ paths:
           description: Product found
         404:
           description: Product not found
+    delete:
+      summary: force delete all products with this id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: deleteAllWithCategoryId
+      tags:
+        - product
+      responses:
+        204:
+          description: all products with id deleted
 
 components:
   schemas:

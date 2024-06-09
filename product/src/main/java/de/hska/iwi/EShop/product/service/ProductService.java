@@ -2,6 +2,8 @@ package de.hska.iwi.EShop.product.service;
 
 import de.hska.iwi.EShop.product.persistence.Product;
 import de.hska.iwi.EShop.product.persistence.ProductRepository;
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getFilteredProducts(Double minPrice, Double maxPrice, String searchText) {
-        return productRepository.findByPriceGreaterThanEqualAndPriceLessThanEqualAndDetailsContains(minPrice, maxPrice, searchText);
+    public List<Product> getFilteredProducts(Double minPrice, Double maxPrice, String details) {
+        Specification<Product> spec = Specification.where(Product.withPriceRange(minPrice, maxPrice))
+                                                    .and(Product.withDetails(details));
+        return productRepository.findAll(spec);
     }
 
     public Optional<Product> getProductById(final int id) {

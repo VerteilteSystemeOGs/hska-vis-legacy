@@ -124,17 +124,17 @@ paths:
       parameters:
         - name: minPrice
           in: query
-          required: true
+          required: false
           schema:
             type: double
         - name: maxPrice
           in: query
-          required: true
+          required: false
           schema:
             type: double
         - name: searchTest
           in: query
-          required: true
+          required: false
           schema:
             type: string
       operationId: filterProducts

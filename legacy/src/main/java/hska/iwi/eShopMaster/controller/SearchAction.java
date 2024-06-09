@@ -9,8 +9,8 @@ import hska.iwi.eShopMaster.integration.product.api.ProductApi;
 import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
 
 import hska.iwi.eShopMaster.integration.user.api.UserDTO;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class SearchAction extends ActionSupport{
 	private Double sMaxPrice = null;
 	
 	private UserDTO user;
-	private List<ProductDTO> products;
+	private List<DisplayProductDTO> products = new ArrayList<DisplayProductDTO>();
 	private List<CategoryDTO> categories;
 	
 
@@ -51,17 +51,21 @@ public class SearchAction extends ActionSupport{
 		
 		if(user != null){
 			// Search products and show results:
-//			this.products = productManager.getProductsForSearchValues(this.searchDescription, this.searchMinPrice, this.searchMaxPrice);
 			if (!searchMinPrice.isEmpty()){
 				sMinPrice =  Double.parseDouble(this.searchMinPrice);
 			}
 			if (!searchMaxPrice.isEmpty()){
 				sMaxPrice =  Double.parseDouble(this.searchMaxPrice);
 			}
-			this.products = productApi.filterProducts(sMinPrice, sMaxPrice, this.searchDescription);
-			
-			// Show all categories:
+			List<ProductDTO> fetchProducts = productApi.filterProducts(sMinPrice, sMaxPrice, this.searchDescription);
 			this.categories = categoryApi.getAllCategories();
+
+			fetchProducts.forEach((product) -> {
+				String categoryName = this.categories.stream().filter(category -> category.getId() == product.getCategoryId()).findFirst().map(resolvedCategory -> resolvedCategory.getName()).orElse("");
+
+				DisplayProductDTO newProduct = new DisplayProductDTO(product, categoryName);
+				this.products.add(newProduct);
+			});
 			result = "success";
 		}
 		
@@ -77,11 +81,11 @@ public class SearchAction extends ActionSupport{
 			this.user = user;
 		}
 		
-		public List<ProductDTO> getProducts() {
+		public List<DisplayProductDTO> getProducts() {
 			return products;
 		}
 
-		public void setProducts(List<ProductDTO> products) {
+		public void setProducts(List<DisplayProductDTO> products) {
 			this.products = products;
 		}
 
