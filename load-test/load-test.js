@@ -135,7 +135,7 @@ export function createGetAndDeleteCategory(data) {
     categoryName: 'testCategory',
   };
 
-  const resCreate = http.post(`http://${minikubeIp}/category/v1/category`, JSON.stringify(newCategory), {
+  const resCreate = http.post(`http://${minikubeIp}/category/v1/categories`, JSON.stringify(newCategory), {
     headers: {"Content-Type": "application/json"},
     tags: {query: "createNewCategory", name: "createNewCategory"}
   });
