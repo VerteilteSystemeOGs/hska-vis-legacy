@@ -1,11 +1,17 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.ProductManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.integration.category.ApiException;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+import hska.iwi.eShopMaster.integration.product.api.CreateNewProductRequestDTO;
+
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -17,24 +23,33 @@ public class AddProductAction extends ActionSupport {
 
 	private static final long serialVersionUID = 39979991339088L;
 
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+
 	private String name = null;
 	private String price = null;
 	private int categoryId = 0;
 	private String details = null;
-	private List<Category> categories;
+	private List<CategoryDTO> categories;
 
 	public String execute() throws Exception {
 		String result = "input";
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
+		UserDTO user = (UserDTO) session.get("webshop_user");
 
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
 
-			ProductManager productManager = new ProductManagerImpl();
-			int productId = productManager.addProduct(name, Double.parseDouble(price), categoryId,
-					details);
+		}
 
-			if (productId > 0) {
+		if(hasAdminRight) {
+
+			ProductDTO product = productApi.createNewProduct(new CreateNewProductRequestDTO().productName(name).categoryId(categoryId).price(Double.parseDouble(price)).details(details));
+
+			if (product != null) {
 				result = "success";
 			}
 		}
@@ -44,11 +59,14 @@ public class AddProductAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		CategoryManager categoryManager = new CategoryManagerImpl();
-		this.setCategories(categoryManager.getCategories());
 		// Validate name:
+        try {
+            this.setCategories(categoryApi.getAllCategories());
+        } catch (ApiException ignored) {
 
-		if (getName() == null || getName().length() == 0) {
+        }
+
+        if (getName() == null || getName().length() == 0) {
 			addActionError(getText("error.product.name.required"));
 		}
 
@@ -96,11 +114,11 @@ public class AddProductAction extends ActionSupport {
 		this.details = details;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 }

@@ -1,6 +1,12 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.ProductDAO;
+import hska.iwi.eShopMaster.integration.product.ProductApiClientFactory;
+import hska.iwi.eShopMaster.integration.product.api.ProductApi;
+import hska.iwi.eShopMaster.integration.product.api.ProductDTO;
+
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.Map;
@@ -15,6 +21,10 @@ public class DeleteProductAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 3666796923937616729L;
 
+	private final ProductApi productApi = new ProductApi(ProductApiClientFactory.getClient());
+
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+
 	private int id;
 
 	public String execute() throws Exception {
@@ -22,11 +32,18 @@ public class DeleteProductAction extends ActionSupport {
 		String res = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
-		
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		UserDTO user = (UserDTO) session.get("webshop_user");
 
-			new ProductDAO().deleteById(id);
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
+
+		if(hasAdminRight) {
+
+			productApi.deleteProductById(id);
 			{
 				res = "success";
 			}

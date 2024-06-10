@@ -1,8 +1,11 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
 import java.util.List;
@@ -17,25 +20,34 @@ public class DeleteCategoryAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = 1254575994729199914L;
-	
+
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+
 	private int catId;
-	private List<Category> categories;
+	private List<CategoryDTO> categories;
 
 	public String execute() throws Exception {
 		
 		String res = "input";
 		
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("webshop_user");
+		UserDTO user = (UserDTO) session.get("webshop_user");
+
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
 		
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
+		if(hasAdminRight) {
 
 			// Helper inserts new Category in DB:
-			CategoryManager categoryManager = new CategoryManagerImpl();
-		
-			categoryManager.delCategoryById(catId);
+			categoryApi.deleteCategoryById(catId);
 
-			categories = categoryManager.getCategories();
+			categories = categoryApi.getAllCategories();
 				
 			res = "success";
 
@@ -53,11 +65,11 @@ public class DeleteCategoryAction extends ActionSupport {
 		this.catId = catId;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 }

@@ -37,7 +37,7 @@
 		</nav>
 		<div class="container">
 			<div class="row">
-				<s:text name="login.status" /> 	${webshop_user.firstname} ${webshop_user.lastname}
+				<s:text name="login.status"/> ${webshop_user.firstName} ${webshop_user.lastName}
 			</div>
 	
 			<div class="row">
@@ -56,7 +56,7 @@
 				</tr>
 				<tr>
 					<td><s:text name="details.category" /></td>
-					<td><s:property value="product.category.name" /></td>
+					<td><s:property value="category.name"/></td>
 				</tr>
 				<tr>
 					<td><s:text name="details.details" /></td>

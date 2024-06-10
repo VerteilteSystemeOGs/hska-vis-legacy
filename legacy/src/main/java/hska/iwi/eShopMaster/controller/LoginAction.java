@@ -1,8 +1,9 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.UserManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.UserManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.User;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.GetUserByNameRequestDTO;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 
 import java.util.Map;
 
@@ -15,6 +16,9 @@ public class LoginAction extends ActionSupport {
      *
      */
 	private static final long serialVersionUID = -983183915002226000L;
+
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
+
 	private String username = null;
 	private String password = null;
 	private String firstname;
@@ -27,15 +31,14 @@ public class LoginAction extends ActionSupport {
 
 		// Return string:
 		String result = "input";
-
-		UserManager myCManager = new UserManagerImpl();
 		
 		// Get user from DB:
-		User user = myCManager.getUserByUsername(getUsername());
+		UserDTO user = userApi.getUserByName(new GetUserByNameRequestDTO().userName(getUsername()));
 
 		// Does user exist?
 		if (user != null) {
 			// Is the password correct?
+
 			if (user.getPassword().equals(getPassword())) {
 				// Get session to save user role and login:
 				Map<String, Object> session = ActionContext.getContext().getSession();
@@ -43,8 +46,8 @@ public class LoginAction extends ActionSupport {
 				// Save user object in session:
 				session.put("webshop_user", user);
 				session.put("message", "");
-				firstname= user.getFirstname();
-				lastname = user.getLastname();
+				firstname= user.getFirstName();
+				lastname = user.getLastName();
 				role = user.getRole().getTyp();
 				result = "success";
 			}

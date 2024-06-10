@@ -1,10 +1,16 @@
 package hska.iwi.eShopMaster.controller;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.businessLogic.manager.impl.CategoryManagerImpl;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
+import hska.iwi.eShopMaster.integration.category.ApiException;
+import hska.iwi.eShopMaster.integration.category.CategoryApiClientFactory;
+import hska.iwi.eShopMaster.integration.category.api.CategoryApi;
+import hska.iwi.eShopMaster.integration.category.api.CategoryDTO;
+import hska.iwi.eShopMaster.integration.category.api.CreateNewCategoryRequestDTO;
+import hska.iwi.eShopMaster.integration.user.UserApiClientFactory;
+import hska.iwi.eShopMaster.integration.user.api.UserApi;
+import hska.iwi.eShopMaster.integration.user.api.UserDTO;
 import hska.iwi.eShopMaster.model.database.dataobjects.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,26 +23,37 @@ public class AddCategoryAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = -6704600867133294378L;
+
+	private final CategoryApi categoryApi = new CategoryApi(CategoryApiClientFactory.getClient());
+
+	private final UserApi userApi = new UserApi(UserApiClientFactory.getClient());
 	
 	private String newCatName = null;
+
+	private List<CategoryDTO> categories;
 	
-	private List<Category> categories;
-	
-	User user;
+	UserDTO user;
 
 	public String execute() throws Exception {
 
 		String res = "input";
 
 		Map<String, Object> session = ActionContext.getContext().getSession();
-		user = (User) session.get("webshop_user");
-		if(user != null && (user.getRole().getTyp().equals("admin"))) {
-			CategoryManager categoryManager = new CategoryManagerImpl();
+		user = (UserDTO) session.get("webshop_user");
+
+		boolean hasAdminRight = false;
+		try {
+			hasAdminRight = Boolean.TRUE.equals(userApi.hasUserAdminRight(user.getId()).getHasAdminRight());
+		} catch (hska.iwi.eShopMaster.integration.user.ApiException ignored) {
+
+		}
+
+		if(hasAdminRight) {
 			// Add category
-			categoryManager.addCategory(newCatName);
+			categoryApi.createNewCategory(new CreateNewCategoryRequestDTO().categoryName(newCatName));
 			
 			// Go and get new Category list
-			this.setCategories(categoryManager.getCategories());
+			this.setCategories(categoryApi.getAllCategories());
 			
 			res = "success";
 		}
@@ -51,15 +68,18 @@ public class AddCategoryAction extends ActionSupport {
 			addActionError(getText("error.catname.required"));
 		}
 		// Go and get new Category list
-		CategoryManager categoryManager = new CategoryManagerImpl();
-		this.setCategories(categoryManager.getCategories());
+		try {
+			this.setCategories(categoryApi.getAllCategories());
+		} catch (ApiException e) {
+			this.setCategories(new ArrayList<>());
+		}
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 	

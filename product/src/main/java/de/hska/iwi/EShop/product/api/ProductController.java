@@ -5,6 +5,7 @@ import de.hska.iwi.EShop.integration.category.api.CategoryApi;
 import de.hska.iwi.EShop.product.persistence.Product;
 import de.hska.iwi.EShop.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -100,8 +101,8 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ResponseEntity<List<ProductDTO>> filterProducts(Double minPrice, Double maxPrice, String searchText) {
-        return ResponseEntity.ok(productService.getFilteredProducts(minPrice, maxPrice, searchText).stream()
+    public ResponseEntity<List<ProductDTO>> filterProducts(@RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) String searchTest) {
+        return ResponseEntity.ok(productService.getFilteredProducts(minPrice, maxPrice, searchTest).stream()
                 .map(product -> ProductDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
